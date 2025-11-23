@@ -1,4 +1,4 @@
-.PHONY: help build run docker-build docker-up docker-down migrate-up migrate-down lint fmt
+include .env
 
 APP_NAME=pr-reviewer-service
 DOCKER_COMPOSE=docker-compose
@@ -10,6 +10,11 @@ MIGRATIONS_DIR=./migrations
 
 DB_HOST=localhost
 DB_PORT=5436
+
+# PostgreSQL connection variables (can be overridden via environment)
+POSTGRES_USER ?= $(POSTGRES_USER)
+POSTGRES_PASSWORD ?= $(POSTGRES_PASSWORD)
+POSTGRES_DB ?= $(POSTGRES_DB)
 
 help:
 	@echo "Available commands:"
@@ -23,6 +28,11 @@ help:
 	@echo "  make migrate-up      - Apply migrations"
 	@echo "  make migrate-down    - Rollback migrations"
 	@echo "  make lint            - Run linter"
+	@echo "  make load-test       - Run load test"
+
+
+load-test:
+	k6 run tests/load_test.js
 
 build:
 	@$(GO) build -o bin/$(APP_NAME) $(CMD_DIR)/main.go
@@ -42,7 +52,7 @@ docker-down:
 docker-logs:
 	@$(DOCKER_COMPOSE) logs -f
 
-migrate-up: ## Apply all migrations to database
+migrate-up: 
 	@echo "Applying migrations to database..."
 	@for migration in $$(ls $(MIGRATIONS_DIR)/*.up.sql | sort); do \
 		echo "Applying: $$(basename $$migration)"; \
@@ -51,7 +61,7 @@ migrate-up: ## Apply all migrations to database
 	done
 	@echo "✓ All migrations successfully applied!"
 
-migrate-down: ## Rollback migrations
+migrate-down: 
 	@echo "Rolling back migrations..."
 	@for migration in $$(ls $(MIGRATIONS_DIR)/*.down.sql | sort -r); do \
 		echo "Rolling back: $$(basename $$migration)"; \
