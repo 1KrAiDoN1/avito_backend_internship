@@ -11,7 +11,6 @@ MIGRATIONS_DIR=./migrations
 DB_HOST=localhost
 DB_PORT=5436
 
-# PostgreSQL connection variables (can be overridden via environment)
 POSTGRES_USER ?= $(POSTGRES_USER)
 POSTGRES_PASSWORD ?= $(POSTGRES_PASSWORD)
 POSTGRES_DB ?= $(POSTGRES_DB)
