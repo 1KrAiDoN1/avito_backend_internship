@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
-	"internship/domain/entity"
+	"internship/internal/domain/entity"
 	"math/rand"
 	"time"
 

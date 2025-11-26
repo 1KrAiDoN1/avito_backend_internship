@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"internship/domain/entity"
+	"internship/internal/domain/entity"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"

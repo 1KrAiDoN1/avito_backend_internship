@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"internship/domain/entity"
+	"internship/internal/domain/entity"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

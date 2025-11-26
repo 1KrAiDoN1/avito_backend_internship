@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"internship/domain/entity"
+	"internship/internal/domain/entity"
 )
 
 type TeamRepositoryInterface interface {

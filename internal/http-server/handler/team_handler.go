@@ -3,7 +3,7 @@ package handler
 import (
 	"errors"
 	"fmt"
-	"internship/domain/entity"
+	"internship/internal/domain/entity"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

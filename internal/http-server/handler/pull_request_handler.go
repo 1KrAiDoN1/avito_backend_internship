@@ -2,7 +2,7 @@ package handler
 
 import (
 	"errors"
-	"internship/domain/entity"
+	"internship/internal/domain/entity"
 	"internship/internal/models/dto"
 	"net/http"
 
