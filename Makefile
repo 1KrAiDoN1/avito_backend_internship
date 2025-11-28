@@ -6,11 +6,6 @@ GOLINT=golangci-lint
 GO=go
 CMD_DIR=./cmd/app
 
-MIGRATIONS_DIR=./migrations
-
-DB_HOST=localhost
-DB_PORT=5436
-
 POSTGRES_USER ?= $(POSTGRES_USER)
 POSTGRES_PASSWORD ?= $(POSTGRES_PASSWORD)
 POSTGRES_DB ?= $(POSTGRES_DB)
@@ -52,22 +47,9 @@ docker-logs:
 	@$(DOCKER_COMPOSE) logs -f
 
 migrate-up: 
-	@echo "Applying migrations to database..."
-	@for migration in $$(ls $(MIGRATIONS_DIR)/*.up.sql | sort); do \
-		echo "Applying: $$(basename $$migration)"; \
-		PGPASSWORD=$(POSTGRES_PASSWORD) psql -h $(DB_HOST) -p $(DB_PORT) -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f $$migration || exit 1; \
-		echo "✓ Successfully applied: $$(basename $$migration)"; \
-	done
-	@echo "✓ All migrations successfully applied!"
+	${DOCKER_COMPOSE} exec app migrate -path /app/migrations -database "${DB_URL}" up
 
-migrate-down: 
-	@echo "Rolling back migrations..."
-	@for migration in $$(ls $(MIGRATIONS_DIR)/*.down.sql | sort -r); do \
-		echo "Rolling back: $$(basename $$migration)"; \
-		PGPASSWORD=$(POSTGRES_PASSWORD) psql -h $(DB_HOST) -p $(DB_PORT) -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f $$migration || exit 1; \
-		echo "✓ Successfully rolled back: $$(basename $$migration)"; \
-	done
-	@echo "✓ All migrations successfully rolled back!"
-
+migrate-down:
+	${DOCKER_COMPOSE} exec app migrate -path /app/migrations -database "${DB_URL}" down
 lint:
 	@$(GOLINT) run ./...

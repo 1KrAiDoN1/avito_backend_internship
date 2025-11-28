@@ -21,7 +21,9 @@ services:
       - app_network
 
   migrate:
-    image: postgres:16-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: pr_reviewer_migrate
     depends_on:
       postgres:
@@ -29,15 +31,11 @@ services:
     env_file:
       - .env
     environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: ${POSTGRES_USER}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
-      DB_NAME: ${POSTGRES_DB}
+      DB_URL: ${DB_URL}
     volumes:
-      - ./migrations:/migrations
-      - ./scripts/migrate.sh:/migrate.sh
-    entrypoint: ["/bin/sh", "/migrate.sh"]
+      - ./migrations:/app/migrations
+      - ./scripts/migrate.sh:/app/scripts/migrate.sh
+    entrypoint: ["/bin/sh", "/app/scripts/migrate.sh"]
     networks:
       - app_network
 
